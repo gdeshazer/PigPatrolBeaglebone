@@ -4,8 +4,12 @@ import java.util.logging.LogRecord;
 /**
  * Created by grantdeshazer on 3/16/16.
  *
- * Custom loggger formater.  Data recorded first
+ * Custom logger formater.  Data recorded first
  * timestamp recorded second.
+ *
+ * This will need to be changed latter in order to accomadate
+ * sensor position.  Likely the arduino will send the actual
+ * sensor position.
  *
  */
 public class DataLogFormater extends Formatter{
@@ -14,7 +18,7 @@ public class DataLogFormater extends Formatter{
     public String format(LogRecord record){
         String out;
         long t = System.currentTimeMillis();
-        out = record.getMessage() + " : " + Long.toString(t);
+        out = record.getMessage() + " : " + Long.toString(t) + "\n";
         return out;
     }
 
