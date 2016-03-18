@@ -1,3 +1,5 @@
+package com.pig;
+
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
@@ -17,8 +19,7 @@ public class DataLogFormater extends Formatter{
     @Override
     public String format(LogRecord record){
         String out;
-        long t = System.currentTimeMillis();
-        out = record.getMessage() + " : " + Long.toString(t) + "\n";
+        out = record.getMessage() + "\n";
         return out;
     }
 

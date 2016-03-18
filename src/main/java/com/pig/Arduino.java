@@ -1,6 +1,10 @@
+package com.pig;
+
 import org.bulldog.core.io.bus.i2c.I2cBus;
 import org.bulldog.core.io.bus.i2c.I2cConnection;
 import org.bulldog.core.io.bus.i2c.I2cDevice;
+
+import java.io.IOException;
 
 /**
  * Created by grantdeshazer on 3/16/16.
@@ -39,34 +43,53 @@ public class Arduino extends I2cDevice {
     public void writeTo(String string) {
         try {
             this.writeString("10");
-        } catch (Exception e){
+        } catch (Exception e) {
             System.err.println("Error: Failed to write to I2C bus");
             e.printStackTrace();
         }
     }
 
     public String readFrom() {
-        String input;
+        String input = "";
+        byte[] buff = new byte[2];
 
         try {
-            this.open();
-            if(this.isOpen()) {
-                input = this.readString();
-            } else {
-                System.err.println("Failed to open connection");
-                input = "FAIL TO OPEN CONNECTION";
-            }
-
-            this.close();
-        } catch (Exception e) {
-            System.err.println("Error: Failed to read I2C bus");
+            this.getBusConnection().readBytes(buff);
+        } catch (IOException e) {
+            System.err.println("Failled to read bytes");
             e.printStackTrace();
-
-            input = "Failed to read";
         }
 
+//        byte inputByteArray[] = new byte[2];
+
+//        try {
+////            this.open();
+////
+////            this.writeByte(0);
+////            if(this.isOpen()){
+////                byte b = this.readByte();
+////                input = Byte.toString(b);
+////            } else {
+////                System.err.println("Failed to open connection");
+////                input = "FAIL TO OPEN CONNECTION";
+////            }
+////
+////            this.close();
+////        } catch (Exception e) {
+////            System.err.println("Error: Failed to read I2C bus");
+////            e.printStackTrace();
+////
+////            input = "Failed to read";
+////        }
+//
+//
+//        return input;
+//    }
+
+        for(byte b : buff){
+            input = input + Byte.toString(b);
+        }
 
         return input;
     }
-
 }
