@@ -1,10 +1,11 @@
 package com.pig;
 
-import org.bulldog.core.io.bus.i2c.I2cBus;
-import org.bulldog.core.io.bus.i2c.I2cConnection;
-import org.bulldog.core.io.bus.i2c.I2cDevice;
+import com.sun.jna.Library;
+import com.sun.jna.Native;
 
-import java.io.IOException;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * Created by grantdeshazer on 3/16/16.
@@ -28,68 +29,25 @@ import java.io.IOException;
  */
 
 
-public class Arduino extends I2cDevice {
-    //constructors inherited from I2cDevice
-    //look for examples in the LibBulldog for this
-    //arduino is being treated here as a "sensor"
-    public Arduino(I2cBus bus, int address) {
-        super(bus, address);
+public class Arduino {
+    public interface Tmp102Library extends Library {
+        Tmp102Library INSTANCE = (Tmp102Library) Native.loadLibrary("tmp102.so", Tmp102Library.class);
+        float getBytes();
     }
 
-    public Arduino(I2cConnection connection) {
-        super(connection);
-    }
-
-    public void writeTo(String string) {
-        try {
-            this.writeString("10");
-        } catch (Exception e) {
-            System.err.println("Error: Failed to write to I2C bus");
-            e.printStackTrace();
-        }
-    }
-
-    public String readFrom() {
-        String input = "";
-        byte[] buff = new byte[2];
+    public float readFloat(){
+        float f = -2;
 
         try {
-            this.getBusConnection().readBytes(buff);
-        } catch (IOException e) {
-            System.err.println("Failled to read bytes");
+            f = Tmp102Library.INSTANCE.getBytes();
+
+        } catch(Exception e) {
             e.printStackTrace();
         }
 
-//        byte inputByteArray[] = new byte[2];
 
-//        try {
-////            this.open();
-////
-////            this.writeByte(0);
-////            if(this.isOpen()){
-////                byte b = this.readByte();
-////                input = Byte.toString(b);
-////            } else {
-////                System.err.println("Failed to open connection");
-////                input = "FAIL TO OPEN CONNECTION";
-////            }
-////
-////            this.close();
-////        } catch (Exception e) {
-////            System.err.println("Error: Failed to read I2C bus");
-////            e.printStackTrace();
-////
-////            input = "Failed to read";
-////        }
-//
-//
-//        return input;
-//    }
-
-        for(byte b : buff){
-            input = input + Byte.toString(b);
-        }
-
-        return input;
+        return f;
     }
+
+
 }

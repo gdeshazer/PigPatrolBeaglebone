@@ -15,10 +15,6 @@ import java.util.logging.*;
 
 //import mockClass.ArduinoMock;
 
-import org.bulldog.beagleboneblack.BBBNames;
-import org.bulldog.core.io.bus.i2c.I2cBus;
-import org.bulldog.core.platform.Board;
-import org.bulldog.core.platform.Platform;
 
 public class MainWriter {
     //using a logger for data storage...simple set up and relatively fast
@@ -60,27 +56,22 @@ public class MainWriter {
         init();
         Timer timer = new Timer();
 
-        final Board board = Platform.createBoard();
 
-        I2cBus bus = board.getI2cBus(BBBNames.I2C_1);  //get i2c bus
-
-        //ArduinoMock a1 = new ArduinoMock(); //mock arduino...returns random number
-
-        Arduino a1 = new Arduino(bus, 0x10);
+        Arduino a1 = new Arduino();
 
         int counter = 0;
 
-        timer.setStartTime();
-        while (counter != 10) {
-            System.out.println("Reading from arduino...");
 
-            String input = a1.readFrom() + " : " + Long.toString(timer.getTime());
+        while (counter != 10000) {
 
-            try{
-                Thread.sleep(100);  //like arduion delay (delay(10))
-            }catch(InterruptedException e){
-                e.printStackTrace();
-            }
+            timer.setStartTime();
+            String input = Float.toString(a1.readFloat()) + " : " + Long.toString(timer.getTime());
+
+//            try{
+//                Thread.sleep(100);  //like arduion delay (delay(10))
+//            }catch(InterruptedException e){
+//                e.printStackTrace();
+//            }
 
             LOGGER.log(Level.INFO, input);  //Store collected data in log file
 

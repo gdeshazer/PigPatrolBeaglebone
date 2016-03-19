@@ -10,9 +10,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>libbulldog</groupId>
-            <artifactId>libbulldog</artifactId>
-            <version>0.1.1</version>
+            <groupId>javajna</groupId>
+            <artifactId>jna</artifactId>
+            <version>4.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javajna</groupId>
+            <artifactId>jnaPlatform</artifactId>
+            <version>4.2.1</version>
         </dependency>
 
     </dependencies>
