@@ -17,7 +17,11 @@ public class Timer {
         startTime = System.currentTimeMillis();
     }
 
-    public long getTime(){
+    public long getCurrentTime(){
+        return System.currentTimeMillis();
+    }
+
+    public long getDeltaTime(){
         _t = System.currentTimeMillis() - startTime;
         return _t;
     }

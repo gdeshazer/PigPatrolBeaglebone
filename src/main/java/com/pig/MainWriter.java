@@ -29,7 +29,7 @@ public class MainWriter {
     private static void init(){
 
         int fileSize = (int) (5 * Math.pow(10,6));
-        int numberOfFiles = 4;
+        int numberOfFiles = 10;
 
         try{
             //path here is specific to beaglebone
@@ -62,16 +62,16 @@ public class MainWriter {
         int counter = 0;
 
 
-        while (counter != 10000) {
+        timer.setStartTime();
+        while (counter != 100000) {
 
-            timer.setStartTime();
-            String input = Float.toString(a1.readFloat()) + " : " + Long.toString(timer.getTime());
+            String input = Float.toString(a1.readFloat()) + " : " + Long.toString(timer.getDeltaTime());
 
-//            try{
-//                Thread.sleep(100);  //like arduion delay (delay(10))
-//            }catch(InterruptedException e){
-//                e.printStackTrace();
-//            }
+            try{
+                Thread.sleep(30);  //like arduion delay (delay(10))
+            }catch(InterruptedException e){
+                e.printStackTrace();
+            }
 
             LOGGER.log(Level.INFO, input);  //Store collected data in log file
 
