@@ -63,12 +63,19 @@ public class MainWriter {
 
 
         timer.setStartTime();
-        while (counter != 100000) {
+        while (counter != 10000) {
+            String input = "";
 
-            String input = Float.toString(a1.readFloat()) + " : " + Long.toString(timer.getDeltaTime());
+            float[] returnFloat = new float[2];
+            returnFloat = a1.readFloats();
+
+            for(float i : returnFloat){
+                input = input + Float.toString(i) + "\t";
+            }
+            input = input +  " : " + Long.toString(timer.getDeltaTime());
 
             try{
-                Thread.sleep(30);  //like arduion delay (delay(10))
+                Thread.sleep(100);  //like arduion delay (delay(10))
             }catch(InterruptedException e){
                 e.printStackTrace();
             }

@@ -2,10 +2,9 @@ package com.pig;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.*;
 
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 /**
  * Created by grantdeshazer on 3/16/16.
@@ -32,22 +31,77 @@ import java.nio.ByteOrder;
 public class Arduino {
     public interface Tmp102Library extends Library {
         Tmp102Library INSTANCE = (Tmp102Library) Native.loadLibrary("tmp102.so", Tmp102Library.class);
-        float getBytes();
+
+        void getBytes(IntByReference numDev, PointerByReference returnArray);
+
+        void cleanUp(Pointer p);
     }
 
-    public float readFloat(){
-        float f = -2;
+    public float[] readFloats() {
+        PointerByReference returnRefptr = new PointerByReference();
+        IntByReference numDev = new IntByReference();
 
-        try {
-            f = Tmp102Library.INSTANCE.getBytes();
 
-        } catch(Exception e) {
-            e.printStackTrace();
+        Tmp102Library.INSTANCE.getBytes(numDev, returnRefptr);
+
+        int numVals = numDev.getValue();
+
+        this._numOfDev = numVals;
+
+        System.out.println("Retrived " + numVals + " floats");
+
+        if (0 < numVals) {
+            Pointer ptrVal = returnRefptr.getValue();
+
+            float[] rtVal = new float[numVals];
+            for (int i = 0; i < numVals; i++) {
+                rtVal[i] = ptrVal.getFloat(i * Native.getNativeSize(Float.TYPE));
+            }
+            Tmp102Library.INSTANCE.cleanUp(ptrVal);
+            return rtVal;
+        } else {
+            return null;
         }
 
-
-        return f;
     }
 
+    public int get_numOfDev(){
+        return _numOfDev;
+    }
 
+    private int _numOfDev;
 }
+
+//public interface CLibrary extends Library {
+//    public double example9_getDoubleArray(PointerByReference valsRef, IntByReference numValsRef);
+//    public void example9_cleanup(Pointer p);
+//}
+//...
+//        CLibrary clib = (CLibrary)Native.loadLibrary("testlib", CLibrary.class);
+//        ...
+//        PointerByReference ex9ValsRefPtr = new PointerByReference();
+//        IntByReference ex9NumValsRef = new IntByReference();
+//// call the C function
+//        clib.example9_getDoubleArray(ex9ValsRefPtr, ex9NumValsRef);
+////    // extract the number of values returned
+//        int ex9NumVals = ex9NumValsRef.getValue();
+//        System.out.println("example 9: retreived " + ex9NumVals + " values:");
+//// make sure the C function returned some values
+//        if (0 < ex9NumVals) {
+//        // extract the pointed-to pointer
+//        Pointer ex9pVals = ex9ValsRefPtr.getValue();
+//        // look at each value
+//        double ex9total = 0.0;
+//        for (int ex9Loop=0; ex9Loop<ex9NumVals; ex9Loop++) {
+//            double ex9val = ex9pVals.getDouble(ex9Loop * Native.getNativeSize(Double.TYPE));
+//            ex9total += ex9val;
+//        }
+//        System.out.println("\ttotal: " + ex9total);
+//
+//        // call C code to clean up memory allocated in C
+//        System.out.println("\t(example 9: cleanup)");
+//        clib.example9_cleanup(ex9pVals);
+//    }
+//
+//}
+//
