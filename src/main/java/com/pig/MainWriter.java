@@ -72,7 +72,7 @@ public class MainWriter {
             for(float i : returnFloat){
                 input = input + Float.toString(i) + "\t";
             }
-            input = input +  " : " + Long.toString(timer.getDeltaTime());
+            input = input +  "\t" + Long.toString(timer.getDeltaTime());
 
             try{
                 Thread.sleep(100);  //like arduion delay (delay(10))
